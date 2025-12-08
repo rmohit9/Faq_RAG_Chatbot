@@ -1,0 +1,74 @@
+{% extends "chat/base.html" %}
+{% load static %}
+
+{% block title %}Logged Out - Graphura AI Chatbot{% endblock title %}
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'chat/images/Graphura-logo-white.png' %}" alt="Graphura Logo"
+                    style="height: 40px;">
+            </a>
+
+            <!-- Hamburger Menu -->
+            <div id="navbar-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="nav-links" id="navbar-dropdown">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'chat' %}">Chat</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin_dashboard' %}" class="nav-btn">Admin Dashboard</a></li>
+                {% else %}
+                <li><a href="{% url 'user_dashboard' %}" class="nav-btn">User Dashboard</a></li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="nav-btn">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="nav-btn">Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+
+{% block head_content %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'chat/css/logout.css' %}">
+{% endblock head_content %}
+
+{% block content %}
+<div class="logout-container">
+    <div class="logout-card">
+        <h2>You have been logged out!</h2>
+        <p>Thank you for using Graphura AI Chatbot. We hope to see you again soon.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Return to Homepage</a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const navbarDropdown = document.getElementById('navbar-dropdown');
+            if (navbarToggle && navbarDropdown) {
+                navbarToggle.addEventListener('click', () => { navbarDropdown.classList.toggle('active'); navbarToggle.classList.toggle('open'); });
+                document.addEventListener('click', (e) => { if (!navbarToggle.contains(e.target) && !navbarDropdown.contains(e.target)) { navbarDropdown.classList.remove('active'); navbarToggle.classList.remove('open'); } });
+                navbarDropdown.addEventListener('click', (e) => { if (e.target.tagName === 'A') { navbarDropdown.classList.remove('active'); navbarToggle.classList.remove('open'); } });
+            }
+        });
+    </script>
+{% endblock extra_js %}

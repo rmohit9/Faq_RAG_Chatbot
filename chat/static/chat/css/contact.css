@@ -1,0 +1,241 @@
+/* ====== CONTACT PAGE ====== */
+
+/* Container & Vertical Centering */
+.form-container {
+    margin-top: 80px; /* navbar height */
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+}
+
+/* Form Card */
+.form-card {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(109, 139, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Heading & Description */
+.form-card h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    text-align: center;
+}
+
+.form-card p {
+    color: #ddd;
+    font-size: 14px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Form Groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #cfcfff;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s ease;
+    resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 10px rgba(157, 108, 255, 0.45);
+}
+
+/* Submit Button */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(157, 108, 255, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .form-container {
+        padding: 25px;
+    }
+
+    .form-card {
+        width: 100%;
+        padding: 25px;
+    }
+
+    .form-card h2 {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 500px) {
+    .form-container {
+        padding: 15px;
+        min-height: calc(100vh - 70px);
+    }
+
+    .form-card h2 {
+        font-size: 24px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .btn-primary {
+        font-size: 15px;
+        padding: 10px;
+    }
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #2c3e50; /* Dark blue-gray */
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box; /* Ensure padding doesn't increase width */
+}
+
+.navbar-brand {
+    color: #ecf0f1; /* Light gray */
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand .logo-icon {
+    height: 2.5rem; /* Adjust based on your logo size */
+    margin-right: 0.75rem;
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-item {
+    margin-left: 2rem;
+}
+
+.navbar-link {
+    color: #ecf0f1; /* Light gray */
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-link:hover {
+    color: #3498db; /* Primary blue */
+}
+
+.navbar-toggle {
+    display: none; /* Hidden by default on larger screens */
+    flex-direction: column;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.navbar-toggle .icon-bar {
+    height: 3px;
+    width: 25px;
+    background-color: #ecf0f1;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #2c3e50;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        padding: 1rem 0;
+        border-top: 1px solid #34495e;
+    }
+
+    .navbar-menu.active {
+        display: flex;
+    }
+
+    .navbar-item {
+        margin: 0;
+        text-align: center;
+        padding: 0.75rem 0;
+    }
+
+    .navbar-link {
+        display: block;
+        padding: 0.75rem 1rem;
+    }
+
+    .navbar-toggle {
+        display: flex;
+    }
+}
+
+/* Adjust body padding for fixed navbar */
+body {
+    padding-top: 80px; /* Height of your navbar */
+}

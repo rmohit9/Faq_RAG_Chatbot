@@ -1,0 +1,650 @@
+{% extends 'chat/admin_base.html' %}
+{% load static %}
+
+{% block admin_title %}Dashboard Overview{% endblock %}
+
+{% block admin_content %}
+<style>
+    /* Dashboard Styles */
+    .dashboard-section {
+        margin-bottom: 2.5rem;
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #e0e0e0;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 0.75rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #8a63d2, #5e35b1);
+        border-radius: 3px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: rgba(30, 30, 45, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(138, 99, 210, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(138, 99, 210, 0.2);
+        border-color: rgba(138, 99, 210, 0.3);
+    }
+
+    .stat-title {
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #a0a0c0;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #8a63d2, #5e35b1);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 0.5rem 0;
+        line-height: 1.2;
+    }
+
+    .stat-subtitle {
+        font-size: 0.9rem;
+        color: #8a8aa8;
+        margin: 0;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .action-btn {
+        background: linear-gradient(135deg, #8a63d2, #5e35b1);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(94, 53, 177, 0.3);
+    }
+
+    .action-btn i {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(94, 53, 177, 0.4);
+        text-decoration: none;
+        color: white;
+    }
+
+    /* Welcome Header */
+    .welcome-header {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .welcome-header h1 {
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+    }
+
+    .welcome-header .text-muted {
+        color: #a0a0c0;
+        font-size: 1.05rem;
+        margin: 0;
+    }
+
+    /* Recent Activity */
+    .recent-activity {
+        background: rgba(30, 30, 45, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(138, 99, 210, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .no-activity {
+        color: #8a8aa8;
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    /* Analytics Grid */
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .chart-container {
+        background: rgba(30, 30, 45, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(138, 99, 210, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .chart-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(138, 99, 210, 0.2);
+        border-color: rgba(138, 99, 210, 0.3);
+    }
+
+    .chart-container h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .stat-card {
+            padding: 0.75rem;
+            min-height: 100px;
+        }
+
+        .stat-title {
+            font-size: 0.7rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            margin: 0.25rem 0;
+        }
+
+        .stat-subtitle {
+            font-size: 0.8rem;
+        }
+
+        .analytics-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .chart-container {
+            padding: 1rem;
+        }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 150px !important;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .action-btn i {
+            margin-right: 0.3rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .analytics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <h1 class="section-title">Dashboard Overview</h1>
+        <p class="text-muted">Welcome back! Here's what's happening with your GRAPHURA platform.</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-title">Total Users</div>
+            <div class="stat-value" id="total-users">{{ total_users|default:"0" }}</div>
+            <p class="stat-subtitle">Number of registered users.</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title">Active Bots</div>
+            <div class="stat-value" id="active-bots">{{ active_bots|default:"0" }}</div>
+            <p class="stat-subtitle">Currently active bot configurations.</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title">Total Chats</div>
+            <div class="stat-value" id="total-chats">{{ total_chats|default:"0" }}</div>
+            <p class="stat-subtitle">Total chat interactions.</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title">Messages</div>
+            <div class="stat-value" id="total-messages">{{ total_messages|default:"0" }}</div>
+            <p class="stat-subtitle">Total messages exchanged.</p>
+        </div>
+    </div>
+
+    <!-- Analytics Graphs -->
+    <div class="dashboard-section">
+        <h2 class="section-title">Analytics Overview</h2>
+        <div class="analytics-grid">
+            <div class="chart-container">
+                <h3>User Registrations (Last 12 Months)</h3>
+                <canvas id="userChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Chat Sessions (Last 30 Days)</h3>
+                <canvas id="chatChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Messages (Last 30 Days)</h3>
+                <canvas id="messageChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions">
+            <a href="{% url 'bot_config_manage' %}" class="action-btn">
+                <i class="fas fa-robot"></i> Manage Bot Configurations
+            </a>
+            <a href="{% url 'user_management' %}" class="action-btn">
+                <i class="fas fa-users"></i> View User List
+            </a>
+            <a href="{% url 'analytics' %}" class="action-btn">
+                <i class="fas fa-comment-alt"></i> Review Chat Logs
+            </a>
+            <a href="{% url 'bot_config_manage' %}" class="action-btn">
+                <i class="fas fa-robot"></i> Configure Bots
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Function to update dashboard stats
+    function updateDashboardStats() {
+        fetch(window.location.href, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            },
+            credentials: 'same-origin'
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Update the stats with the new data
+                document.getElementById('total-users').textContent = data.total_users || 0;
+                document.getElementById('active-bots').textContent = data.active_bots || 0;
+                document.getElementById('total-chats').textContent = data.total_chats || 0;
+                document.getElementById('total-messages').textContent = data.total_messages || 0;
+            })
+            .catch(error => console.error('Error fetching dashboard stats:', error));
+    }
+    // Initialize charts
+    function initializeCharts() {
+        // Fetch data from Django API
+        fetch('/api/admin_dashboard/')
+            .then(response => response.json())
+            .then(data => {
+                // User Registrations Chart
+                const userLabels = data.user_registrations.map(item => item.month);
+                const userCounts = data.user_registrations.map(item => item.count);
+
+                const userCtx = document.getElementById('userChart').getContext('2d');
+                new Chart(userCtx, {
+                    type: 'line',
+                    data: {
+                        labels: userLabels,
+                        datasets: [{
+                            label: 'User Registrations',
+                            data: userCounts,
+                            borderColor: '#8a63d2',
+                            backgroundColor: 'rgba(138, 99, 210, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#a0a0c0'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#a0a0c0'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Chat Sessions Chart
+                const chatLabels = data.chat_sessions.map(item => item.day);
+                const chatCounts = data.chat_sessions.map(item => item.count);
+
+                const chatCtx = document.getElementById('chatChart').getContext('2d');
+                new Chart(chatCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chatLabels,
+                        datasets: [{
+                            label: 'Chat Sessions',
+                            data: chatCounts,
+                            backgroundColor: 'rgba(138, 99, 210, 0.6)',
+                            borderColor: '#8a63d2',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#a0a0c0'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#a0a0c0'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Messages Chart
+                const messageLabels = data.messages.map(item => item.day);
+                const messageCounts = data.messages.map(item => item.count);
+
+                const messageCtx = document.getElementById('messageChart').getContext('2d');
+                new Chart(messageCtx, {
+                    type: 'line',
+                    data: {
+                        labels: messageLabels,
+                        datasets: [{
+                            label: 'Messages',
+                            data: messageCounts,
+                            borderColor: '#5e35b1',
+                            backgroundColor: 'rgba(94, 53, 177, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#a0a0c0'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#a0a0c0'
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching dashboard data:', error);
+                // Fallback: show empty charts
+                initializeEmptyCharts();
+            });
+    }
+
+    function initializeEmptyCharts() {
+        // User Registrations Chart (empty)
+        const userCtx = document.getElementById('userChart').getContext('2d');
+        new Chart(userCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'User Registrations',
+                    data: [],
+                    borderColor: '#8a63d2',
+                    backgroundColor: 'rgba(138, 99, 210, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#a0a0c0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#a0a0c0'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chat Sessions Chart (empty)
+        const chatCtx = document.getElementById('chatChart').getContext('2d');
+        new Chart(chatCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Chat Sessions',
+                    data: [],
+                    backgroundColor: 'rgba(138, 99, 210, 0.6)',
+                    borderColor: '#8a63d2',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#a0a0c0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#a0a0c0'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Messages Chart (empty)
+        const messageCtx = document.getElementById('messageChart').getContext('2d');
+        new Chart(messageCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Messages',
+                    data: [],
+                    borderColor: '#5e35b1',
+                    backgroundColor: 'rgba(94, 53, 177, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#a0a0c0'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#a0a0c0'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize charts on page load
+    document.addEventListener('DOMContentLoaded', initializeCharts);
+
+    // Update stats every 30 seconds
+    setInterval(updateDashboardStats, 30000);
+
+    // Initial load
+    updateDashboardStats();
+</script>
+{% endblock %}
+
+{% endblock %}

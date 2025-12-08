@@ -1,0 +1,268 @@
+{% extends 'chat/admin_base.html' %}
+{% load static %}
+
+{% block admin_title %}User Management{% endblock %}
+
+{% block admin_content %}
+<style>
+    .user-container { max-width: 1000px; margin: 0 auto; padding: 1rem 0 2rem; }
+
+    /* Responsive adjustments for tables */
+    @media (max-width: 768px) {
+        .user-container {
+            padding: 0.5rem;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .user-card {
+            padding: 1rem;
+            margin: 0 0.5rem;
+            overflow-x: auto;
+        }
+
+        .user-table {
+            font-size: 0.85rem;
+            min-width: 600px;
+        }
+
+        .user-table thead th,
+        .user-table tbody td {
+            padding: 0.4rem 0.3rem;
+        }
+
+        .user-cell {
+            gap: 0.5rem;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            font-size: 0.8rem;
+        }
+
+        .btn-view {
+            padding: 0.4rem 0.7rem;
+            font-size: 0.8rem;
+        }
+
+        .chart-card {
+            padding: 1rem;
+            margin: 1rem 0.5rem 0;
+        }
+
+        .chart-card canvas {
+            width: 100% !important;
+            height: 250px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .user-card {
+            padding: 0.75rem;
+            margin: 0 0.25rem;
+        }
+
+        .user-table {
+            font-size: 0.8rem;
+            min-width: 500px;
+        }
+
+        .user-table thead th,
+        .user-table tbody td {
+            padding: 0.5rem 0.4rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .chart-card {
+            padding: 0.75rem;
+            margin: 1rem 0.25rem 0;
+        }
+
+        .chart-card canvas {
+            height: 200px !important;
+        }
+
+        .user-table thead th,
+        .user-table tbody td {
+            padding: 0.3rem 0.2rem;
+        }
+    }
+
+    /* Larger screens - increase table and form size */
+    @media (min-width: 1024px) {
+        .user-table {
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .user-table thead th {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .user-table tbody td {
+            padding: 1.25rem 1.5rem;
+        }
+
+        .user-container {
+            max-width: 1400px;
+        }
+
+        .user-card {
+            padding: 2rem;
+        }
+
+        .chart-card canvas {
+            height: 300px !important;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group input[type="file"] {
+            padding: 0.875rem 1.125rem;
+            font-size: 1rem;
+        }
+    }
+
+    @media (min-width: 1440px) {
+        .user-table thead th {
+            padding: 1.25rem 2rem;
+        }
+
+        .user-table tbody td {
+            padding: 1.5rem 2rem;
+        }
+
+        .user-container {
+            max-width: 1600px;
+        }
+
+        .user-card {
+            padding: 2.5rem;
+        }
+
+        .chart-card canvas {
+            height: 350px !important;
+        }
+
+        .form-grid {
+            gap: 2rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group input[type="file"] {
+            padding: 1rem 1.25rem;
+        }
+    }
+
+    .section-header { display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 0.5rem 0 1rem; }
+    .section-header h2 { margin: 0; font-weight: 700; }
+
+    .user-card { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: #e5e7eb; border-radius: 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.35); border: none; padding: 1.5rem; }
+    .user-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+    .user-table thead th { text-align: left; font-weight: 700; color: #cbd5e1; padding: 0.75rem 1rem; background: rgba(138, 99, 210, 0.08); border-radius: 10px; }
+    .user-table tbody tr { background: #0f172a; }
+    .user-table tbody tr:nth-child(odd) { background: rgba(15, 23, 42, 0.9); }
+    .user-table tbody td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(138,99,210,0.12); vertical-align: middle; }
+
+    .user-cell { display: flex; align-items: center; gap: 0.75rem; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #8a63d2 0%, #5e35b1 100%); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; }
+    .actions { text-align: right; }
+    .btn-view { background: linear-gradient(135deg, #8a63d2 0%, #5e35b1 100%); border: none; color: #fff; padding: 0.45rem 0.9rem; border-radius: 10px; font-weight: 600; }
+    .btn-view:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(138, 99, 210, 0.35); }
+
+    .chart-card { margin-top: 1.25rem; background: linear-gradient(135deg, #1e293b 0%, #0f0f1a 100%); color: #e5e7eb; border-radius: 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.35); border: none; padding: 1.5rem; }
+</style>
+
+<div class="user-container">
+    <div class="section-header">
+        <h2>User Management</h2>
+    </div>
+
+    <div class="user-card">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Chat Sessions</th>
+                    <th style="text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_profile in users %}
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <span class="avatar"><i class="fas fa-user"></i></span>
+                            <span>{{ user_profile.user.username }}</span>
+                        </div>
+                    </td>
+                    <td>{{ user_profile.user.email }}</td>
+                    <td>{{ user_profile.session_count }}</td>
+                    <td class="actions">
+                        <a href="{% url 'user_chat_logs' user_profile.pk %}" class="btn btn-sm btn-view">View Chat Logs</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center; color:#94a3b8; padding:1rem;">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-card">
+        <h5 style="margin:0 0 0.75rem 0;">User Chat Activity Summary</h5>
+        <canvas id="userChatActivityChart"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{ user_labels|json_script:"user_labels_data" }}
+{{ session_counts|json_script:"session_counts_data" }}
+<script>
+    const labels = JSON.parse(document.getElementById('user_labels_data').textContent);
+    const counts = JSON.parse(document.getElementById('session_counts_data').textContent);
+    const ctx = document.getElementById('userChatActivityChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of Chat Sessions',
+                data: counts,
+                borderColor: '#8a63d2',
+                backgroundColor: 'rgba(138, 99, 210, 0.1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: { legend: { labels: { color: '#000' }}},
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#000', precision: 0 }
+                },
+                x: {
+                    ticks: { color: '#000' }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% load static %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <img src="{% static 'chat/images/logo-Black.png' %}" alt="Graphura Logo" style="height: 40px; width: auto; margin-bottom: 15px;">
+                <p>
+                    Your trusted digital marketing partner helping businesses grow their online presence and reach their target audience effectively.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'chat' %}">Chat</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- <div class="footer-section">
+                <h4>Team Graphura</h4>
+                <ul>
+                    <li><a href="{{ social.linkedin_1 }}" target="_blank">Abdul Qadir Khan (Senior)</a></li>
+                    <li><a href="{{ social.linkedin_2 }}" target="_blank">Gargi Patel</a></li>
+                    <li><a href="{{ social.linkedin_3 }}" target="_blank">Shreyansh Chaudhary</a></li>
+                    <li><a href="{{ social.linkedin_4 }}" target="_blank">Aneekaa Sharma</a></li>
+                </ul>
+            </div> -->
+
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p>Gurgaon, Haryana, India</p>
+                <p>+91 7378021327</p>
+                <p>official@graphura.in</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Graphura India Private Limited. All Rights Reserved.</p>
+        </div>
+    </footer>

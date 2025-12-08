@@ -1,0 +1,62 @@
+{% extends 'chat/admin_base.html' %}
+{% load static %}
+
+{% block admin_title %}Edit FAQ{% endblock %}
+
+{% block admin_content %}
+<style>
+    .faq-container { max-width: 900px; margin: 0 auto; padding: 1rem 0 2rem; }
+    .faq-card {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #e5e7eb; border-radius: 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+        border: none; padding: 1.75rem;
+    }
+    .faq-header { text-align: center; margin-bottom: 0.75rem; }
+    .faq-header h2 { margin: 0 0 0.25rem 0; font-weight: 700; letter-spacing: 0.5px; }
+    .faq-header .subtext { color: #94a3b8; font-size: 0.95rem; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-weight: 600; color: #cbd5e1; }
+    .form-group input[type="text"], .form-group textarea {
+        width: 100%; background: #0f172a; color: #e5e7eb;
+        border: 1px solid rgba(138, 99, 210, 0.25); border-radius: 12px;
+        padding: 0.75rem 0.9rem; outline: none;
+    }
+    .form-group textarea { min-height: 140px; }
+    .form-group input[type="text"]:focus, .form-group textarea:focus {
+        border-color: #8a63d2; box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+    }
+    .actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem; }
+    .cta { background: linear-gradient(135deg, #8a63d2 0%, #5e35b1 100%); border: none; border-radius: 12px; padding: 0.9rem 1.25rem; font-weight: 600; }
+    .cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(138, 99, 210, 0.35); }
+    .secondary-btn { background: transparent; color: #cbd5e1; border: 1px solid rgba(138, 99, 210, 0.3); border-radius: 12px; padding: 0.9rem 1.25rem; }
+    .secondary-btn:hover { border-color: #8a63d2; color: #e5e7eb; }
+</style>
+
+<div class="faq-container">
+    <div class="faq-card">
+        <div class="faq-header">
+            <h2>Edit FAQ</h2>
+            <p class="subtext">Update the question and answer content</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="question">Question</label>
+                    <input type="text" id="question" name="question" value="{{ faq.question }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="answer">Answer</label>
+                    <textarea id="answer" name="answer" rows="3" required>{{ faq.answer }}</textarea>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn btn-primary cta">Update FAQ</button>
+                <a href="{% url 'faq_training' %}" class="btn secondary-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

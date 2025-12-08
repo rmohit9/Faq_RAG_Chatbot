@@ -1,0 +1,351 @@
+:root {
+    --primary-bg: #0f0f1a;
+    --sidebar-bg: rgba(15, 15, 26, 0.7);
+    --sidebar-width: 280px;
+    --primary-color: #8a63d2;
+    --primary-glow: 0 0 15px rgba(138, 99, 210, 0.5);
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --transition-speed: 0.3s;
+    --border-radius: 12px;
+}
+
+body {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--primary-bg);
+    padding-top: 60px; /* Match navbar height */
+    margin: 0;
+    padding-left: 0;
+}
+
+/* Glassmorphism Sidebar */
+.admin-sidebar {
+    width: var(--sidebar-width);
+    min-height: calc(100vh - 60px); /* Adjust for navbar height */
+    position: fixed;
+    left: 0;
+    top: 60px; /* Match navbar height */
+    background: var(--primary-bg);
+    border-right: 1px solid rgba(138, 99, 210, 0.2);
+    z-index: 999; /* Just below navbar */
+    overflow-y: auto;
+    transition: var(--transition-speed);
+    margin: 0;
+    padding: 0;
+}
+
+.admin-sidebar-sticky {
+    padding: 1.5rem 1.5rem 2rem;
+}
+
+.admin-sidebar-header {
+    text-align: center;
+    padding: 1.5rem 0 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(138, 99, 210, 0.1);
+}
+
+.admin-sidebar-title {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    background: linear-gradient(90deg, #8a63d2, #5e35b1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+}
+
+.admin-sidebar-subtitle {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.admin-nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-nav-item {
+    margin-bottom: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    transition: var(--transition-speed);
+}
+
+.admin-nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary-color);
+    transform: scaleY(0);
+    transition: transform 0.3s, width 0.4s cubic-bezier(1, 0, 0, 1) 0.2s;
+    z-index: 0;
+}
+
+.admin-nav-item:hover::before,
+.admin-nav-item.active::before {
+    transform: scaleY(1);
+    width: 100%;
+    opacity: 0.1;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.25rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition-speed);
+    position: relative;
+    z-index: 1;
+}
+
+.nav-icon {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition-speed);
+}
+
+.nav-label {
+    flex: 1;
+    transition: var(--transition-speed);
+}
+
+.admin-nav-item:hover .admin-nav-link,
+.admin-nav-link.active {
+    color: var(--text-primary);
+    transform: translateX(5px);
+}
+
+.admin-nav-item:hover .nav-icon,
+.admin-nav-link.active .nav-icon {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.admin-nav-link.active {
+    background: rgba(138, 99, 210, 0.1);
+    box-shadow: 0 0 15px rgba(138, 99, 210, 0.2);
+}
+
+/* Main Content Area */
+.admin-main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    min-height: calc(100vh - 60px);
+    background: var(--primary-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(100% - var(--sidebar-width));
+}
+
+.page-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Center headings */
+.admin-main-content h1,
+.admin-main-content h2,
+.admin-main-content h3,
+.admin-main-content h4,
+.admin-main-content h5,
+.admin-main-content h6 {
+    text-align: center;
+    width: 100%;
+}
+
+/* Center tables and cards */
+.admin-main-content .card,
+.admin-main-content table {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    max-width: 100%;
+}
+
+/* Center forms */
+.admin-main-content form {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Center buttons */
+.admin-main-content .btn,
+.admin-main-content .btn-group {
+    display: inline-flex;
+    justify-content: center;
+    margin: 0.25rem;
+}
+
+/* Center table cells */
+.admin-main-content td,
+.admin-main-content th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Toggle Buttons */
+.navbar-toggle,
+.admin-sidebar-toggle {
+    display: none;
+    background: rgba(138, 99, 210, 0.1);
+    border: 1px solid rgba(138, 99, 210, 0.3);
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-speed);
+    font-size: 1.2rem;
+}
+
+.navbar-toggle:hover,
+.admin-sidebar-toggle:hover {
+    background: rgba(138, 99, 210, 0.2);
+    box-shadow: 0 0 10px rgba(138, 99, 210, 0.3);
+}
+
+.navbar-toggle {
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1001;
+}
+
+.admin-sidebar-toggle {
+    position: fixed;
+    top: 70px;
+    left: 1rem;
+    z-index: 1150;
+}
+
+/* Navbar Dropdown */
+.navbar-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(15, 15, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(138, 99, 210, 0.2);
+    border-top: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    z-index: 1000;
+}
+
+/* Responsive Design (aligned with main_theme.css hamburger breakpoint) */
+@media (max-width: 900px) {
+    .navbar-toggle,
+    .admin-sidebar-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .admin-layout .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .admin-layout:not(.sidebar-collapsed) .admin-sidebar {
+        transform: translateX(0);
+    }
+
+    .admin-layout .admin-main-content {
+        margin-left: 0;
+        padding: 1rem;
+        width: 100%;
+        transition: margin-left 0.3s ease;
+    }
+
+    .admin-layout:not(.sidebar-collapsed) .admin-main-content {
+        margin-left: var(--sidebar-width);
+    }
+
+    .page-content {
+        padding: 0 0.5rem;
+    }
+}
+
+
+
+@media (min-width: 901px) {
+    .admin-sidebar-toggle {
+        display: none;
+    }
+
+    .admin-layout .admin-sidebar {
+        transform: translateX(0) !important; /* Ensure sidebar is always visible */
+    }
+
+    .admin-layout .admin-main-content {
+        margin-left: var(--sidebar-width) !important; /* Ensure content shifts */
+        width: calc(100% - var(--sidebar-width)) !important;
+    }
+
+    /* Override any collapsed state on large screens */
+    .admin-layout.sidebar-collapsed .admin-sidebar {
+        transform: translateX(0) !important;
+    }
+
+    .admin-layout.sidebar-collapsed .admin-main-content {
+        margin-left: var(--sidebar-width) !important;
+        width: calc(100% - var(--sidebar-width)) !important;
+    }
+}
+
+/* Unified collapse via layout class (desktop + mobile) */
+.admin-layout.sidebar-collapsed .admin-sidebar {
+    transform: translateX(-100%);
+}
+
+.admin-layout.sidebar-collapsed .admin-main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+/* Ensure nav links are visible when sidebar is open */
+.admin-layout:not(.sidebar-collapsed) .admin-nav-links {
+    display: block;
+}

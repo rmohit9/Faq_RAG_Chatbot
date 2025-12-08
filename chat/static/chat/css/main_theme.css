@@ -1,0 +1,374 @@
+:root {
+    --nav-bg-start: #0A0F24;
+    --nav-bg-end: #1A1F36;
+    --neon-blue: #6D8BFF;
+    --neon-purple: #9D6CFF;
+    --nav-text: #E0E0FF;
+    --nav-text-hover: #FFFFFF;
+    --nav-glow: 0 0 10px rgba(157, 108, 255, 0.5);
+
+    --primary-bg: #0f0f1a;
+    --primary-color: #8a63d2;
+    --primary-glow: 0 0 15px rgba(138, 99, 210, 0.5);
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --transition-speed: 0.3s;
+    --border-radius: 12px;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ====== NAVBAR ====== */
+/* Add body specificity to prevent admin CSS overrides */
+body .navbar {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    /* Explicit variable values to avoid override */
+    --nav-text: #e4e4e4;
+    --nav-text-padding: 0.45rem 0.8rem;
+    --nav-text-weight: 600;
+}
+
+/* Navbar container flex */
+.navbar .container {
+    width: 100%;
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.navbar .navbar-brand img {
+    display: block;
+    height: 40px;
+    width: auto;
+    margin-top: 8px;
+    vertical-align: middle;
+}
+
+/* Links */
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    flex: 0 1 auto;
+    z-index: 1100;
+}
+
+.navbar .nav-links a {
+    color: var(--nav-text);
+    font-weight: var(--nav-text-weight);
+    text-decoration: none;
+    padding: var(--nav-text-padding);
+    border-radius: 6px;
+    transition: 0.25s ease;
+}
+
+.nav-links a:hover {
+    background: rgba(138, 99, 210, 0.15);
+    color: #c2a1ff;
+}
+
+/* Button in navbar */
+.nav-btn {
+    background: linear-gradient(135deg, #8a63d2, #5e35b1);
+    padding: 0.45rem 1.2rem;
+    border-radius: 8px;
+    color: white !important;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    min-width: 120px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.25s ease;
+    text-decoration: none;
+}
+
+.nav-links .nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(138, 99, 210, 0.35);
+}
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    z-index: 1001; /* Ensure it's above other elements */
+}
+
+.hamburger span {
+    width: 28px;
+    height: 3px;
+    background: #fff;
+    border-radius: 3px;
+    transition: 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Responsive Navbar */
+@media (max-width: 900px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 100%;
+        background: rgba(15, 15, 25, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 1.2rem 0;
+        display: none;
+    }
+
+    body .navbar .nav-links {
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex !important;
+    }
+}
+
+.main-content {
+    padding-top: 70px; 
+    flex-grow: 1; /* Ensures content pushes footer down */
+}
+
+/* ====== Footer ====== */
+.footer {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    color: #e0e0e0;
+    padding: 60px 2rem 40px;
+    /* Navbar की तरह horizontal padding */
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1001;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Decorative line at top */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    right: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(138, 99, 210, 0.3), transparent);
+}
+
+/* Footer container flex (align like navbar) */
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1700px;
+    /* Navbar के max-width के बराबर */
+    margin: 0 auto;
+    /* दोनों साइड equal gap */
+    gap: 40px;
+    flex-wrap: wrap;
+    padding: 0 2rem;
+    /* Navbar padding के बराबर */
+}
+
+/* Each section */
+.footer-section {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Logo section left align */
+.footer-section:first-child {
+    align-items: flex-start;
+    text-align: left;
+}
+
+.footer-section:first-child img {
+    margin-bottom: 15px;
+}
+
+/* Social icons */
+.footer-section:first-child .social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.footer-section:first-child .social-icons a {
+    color: #e0e0e0;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.footer-section:first-child .social-icons a:hover {
+    color: #8a63d2;
+    transform: translateY(-2px);
+}
+
+/* Quick Links center align */
+.footer-section:nth-child(2) {
+    align-items: center;
+    text-align: center;
+}
+
+.footer-section:nth-child(2) ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section:nth-child(2) ul li {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.footer-section:nth-child(2) ul li a {
+    color: #c0c0c0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-section:nth-child(2) ul li a:hover {
+    color: #8a63d2;
+    transform: translateX(3px);
+}
+
+/* Contact section right align */
+.footer-section:last-child {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.footer-section h4 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.footer-section p {
+    color: #b0b0d0;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+/* Footer bottom */
+.footer-bottom {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 13px;
+}
+
+/* Responsive: tablets and mobile */
+@media (max-width: 1024px) {
+
+    .footer-section:first-child,
+    .footer-section:nth-child(2),
+    .footer-section:last-child {
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .footer-section {
+        min-width: unset;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 40px 15px 30px;
+    }
+
+    .footer-section h4 {
+        font-size: 16px;
+    }
+
+    .footer-section p,
+    .footer-section ul li a {
+        font-size: 13px;
+    }
+
+    .footer-section:first-child .social-icons a {
+        font-size: 14px;
+    }
+}

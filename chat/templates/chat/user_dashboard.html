@@ -1,0 +1,162 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - AI Chatbot Agent{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarDropdown = document.getElementById('navbar-dropdown');
+        if (navbarToggle && navbarDropdown) {
+            navbarToggle.addEventListener('click', () => { navbarDropdown.classList.toggle('active'); navbarToggle.classList.toggle('open'); });
+            document.addEventListener('click', (e) => { if (!navbarToggle.contains(e.target) && !navbarDropdown.contains(e.target)) { navbarDropdown.classList.remove('active'); navbarToggle.classList.remove('open'); } });
+            navbarDropdown.addEventListener('click', (e) => { if (e.target.tagName === 'A') { navbarDropdown.classList.remove('active'); navbarToggle.classList.remove('open'); } });
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+{% block head_content %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'chat/css/user_dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'chat/images/Graphura-logo-white.png' %}" alt="Graphura Logo"
+                    style="height: 40px;">
+            </a>
+
+            <!-- Hamburger Menu -->
+            <div id="navbar-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="nav-links" id="navbar-dropdown">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'chat' %}">Chat</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin_dashboard' %}" class="nav-btn">Admin Dashboard</a></li>
+                {% else %}
+                <li><a href="{% url 'user_dashboard' %}" class="nav-btn">User Dashboard</a></li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="nav-btn">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="nav-btn">Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">Welcome back, {{ user.username }}!</h1>
+                <p class="welcome-text">Here's what's happening with your account today.</p>
+            </div>
+            <a href="{% url 'chat' %}" class="btn btn-primary">New Chat</a>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-label">Chats Initiated</div>
+                <div class="stat-value">{{ total_chats }}</div>
+                <p class="text-muted">Total conversations started</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Chat Time</div>
+                <div class="stat-value">{{ total_chat_hours }}<span class="hours-text">h</span></div>
+                <p class="text-muted">Time spent chatting</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Custom Bots</div>
+                <div class="stat-value">{{ custom_bots_count }}</div>
+                <p class="text-muted">Your personalized assistants</p>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="recent-chats">
+                <h2 class="section-title">Recent Chats</h2>
+                <div class="chat-list">
+                    {% if recent_chats %}
+                        {% for chat in recent_chats %}
+                            <a href="{% url 'chat' %}?session_id={{ chat.session_id }}" class="chat-item">
+                                <div class="chat-preview">
+                                    <i class="fas fa-comment-alt chat-icon"></i>
+                                    {{ chat.first_message_content|truncatechars:60 }}
+                                </div>
+                                <div class="chat-time">
+                                    {{ chat.start_time|date:"M d, Y" }}
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-chats">
+                            <i class="far fa-comment-dots no-chats-icon"></i>
+                            <h3>No recent chats</h3>
+                            <p>Start a new conversation to see it here</p>
+                            <a href="{% url 'chat' %}" class="btn btn-primary mt-2">Start Chatting</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="preferences-card">
+                    <h2 class="section-title">Bot Preferences</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="bot-personality" class="form-label">Bot Personality</label>
+                            <select id="bot-personality" name="bot_personality" class="form-control">
+                                <option value="Friendly" {% if user_profile.bot_personality == 'Friendly' %}selected{% endif %}>
+                                    <i class="fas fa-handshake me-2"></i>Friendly
+                                </option>
+                                <option value="Formal" {% if user_profile.bot_personality == 'Formal' %}selected{% endif %}>
+                                    <i class="fas fa-user-tie me-2"></i>Formal
+                                </option>
+                                <option value="Humorous" {% if user_profile.bot_personality == 'Humorous' %}selected{% endif %}>
+                                    <i class="fas fa-laugh me-2"></i>Humorous
+                                </option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-save me-2"></i>Save Preferences
+                        </button>
+                    </form>
+                </div>
+
+                <div class="quick-actions">
+                    <h2 class="section-title">Quick Actions</h2>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'chat' %}" class="btn btn-outline">
+                            <i class="fas fa-plus-circle me-2"></i>New Chat
+                        </a>
+                        <a href="{% url 'logout' %}" class="btn btn-outline">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

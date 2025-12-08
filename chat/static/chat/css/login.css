@@ -1,0 +1,304 @@
+/* FULL PAGE HEIGHT SECTION */
+.login-section {
+    min-height: calc(100vh - 80px);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 45px 0; /* top + bottom balanced */
+}
+
+/* GLASSMORPHIC FORM CONTAINER */
+.form-container {
+    width: 90%;
+    max-width: 1150px;
+
+    background: rgba(255, 255, 255, 0.08); /* glass */
+    backdrop-filter: blur(14px); /* blur effect */
+    -webkit-backdrop-filter: blur(14px);
+
+    padding: 50px;
+    border-radius: 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15); /* border back */
+    box-shadow: 0 0 30px rgba(109, 139, 255, 0.18); /* glow back */
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+/* LEFT FORM AREA */
+.form-card {
+    width: 50%;
+    color: #fff;
+}
+
+.form-card h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+.form-card p {
+    margin-bottom: 25px;
+    color: #ddd;
+}
+
+/* INPUT GROUP */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #eee;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.10);
+    color: #fff;
+
+    transition: 0.25s;
+}
+
+.input-group input:focus {
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 12px rgba(157, 108, 255, 0.6);
+}
+
+/* BUTTON */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 14px rgba(157, 108, 255, 0.6);
+}
+
+/* SIGNUP LINK */
+.signup-link {
+    margin-top: 15px;
+    text-align: center;
+    color: #ccc;
+}
+
+/* RIGHT IMAGE */
+.form-image {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.form-image img {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(109, 139, 255, 0.35);
+}
+
+/* RESPONSIVE */
+@media (max-width: 950px) {
+    .form-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px;
+    }
+
+    .form-card,
+    .form-image {
+        width: 100%;
+    }
+
+    .form-image img {
+        max-width: 330px;
+    }
+}
+
+@media (max-width: 650px) {
+    .form-image {
+        display: none; /* hide image on small screens */
+    }
+
+    .form-container {
+        padding: 35px 25px;
+        width: 92%;
+    }
+}
+
+/* ====== NAVBAR ====== */
+/* Add body specificity to prevent admin CSS overrides */
+body .navbar {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    /* Explicit variable values to avoid override */
+    --nav-text: #e4e4e4;
+    --nav-text-padding: 0.45rem 0.8rem;
+    --nav-text-weight: 600;
+}
+
+/* Navbar container flex */
+.navbar .container {
+    width: 100%;
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.navbar .navbar-brand img {
+    display: block;
+    height: 40px;
+    width: auto;
+    margin-top: 8px;
+    vertical-align: middle;
+}
+
+/* Links */
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    flex: 0 1 auto;
+    z-index: 1100;
+}
+
+.navbar .nav-links a {
+    color: var(--nav-text);
+    font-weight: var(--nav-text-weight);
+    text-decoration: none;
+    padding: var(--nav-text-padding);
+    border-radius: 6px;
+    transition: 0.25s ease;
+}
+
+.nav-links a:hover {
+    background: rgba(138, 99, 210, 0.15);
+    color: #c2a1ff;
+}
+
+/* Button in navbar */
+.nav-btn {
+    background: linear-gradient(135deg, #8a63d2, #5e35b1);
+    padding: 0.45rem 1.2rem;
+    border-radius: 8px;
+    color: white !important;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    min-width: 120px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.25s ease;
+    text-decoration: none;
+}
+
+.nav-links .nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(138, 99, 210, 0.35);
+}
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    z-index: 1001; /* Ensure it's above other elements */
+}
+
+.hamburger span {
+    width: 28px;
+    height: 3px;
+    background: #fff;
+    border-radius: 3px;
+    transition: 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Responsive Navbar */
+@media (max-width: 900px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 0;
+        width: 100%;
+        background: rgba(15, 15, 25, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 1.2rem 0;
+        display: none;
+    }
+
+    body .navbar .nav-links {
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex !important;
+    }
+}
+
+.main-content {
+    padding-top: 70px; 
+    flex-grow: 1; /* Ensures content pushes footer down */
+}

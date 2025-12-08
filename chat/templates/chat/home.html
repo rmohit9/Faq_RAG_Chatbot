@@ -1,0 +1,205 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+
+{% block title %}AI ChatBot - Intelligent Conversations Made Simple{% endblock %}
+
+
+{% block head_content %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'chat/css/home.css' %}">
+<style>
+    /* Consistent heading styles with about page */
+    .hero-title, .section-title, .feature h3, .cta-title, .pricing-title {
+        font-family: 'Poppins', 'Montserrat', sans-serif;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+    
+    body {
+        font-family: 'Montserrat', sans-serif;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'chat/images/Graphura-logo-white.png' %}" alt="Graphura Logo"
+                    style="height: 40px;">
+            </a>
+
+            <!-- Hamburger Menu -->
+            <div id="navbar-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="nav-links" id="navbar-dropdown">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'chat' %}">Chat</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin_dashboard' %}" class="nav-btn">Admin Dashboard</a></li>
+                {% else %}
+                <li><a href="{% url 'user_dashboard' %}" class="nav-btn">User Dashboard</a></li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="nav-btn">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="nav-btn">Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+        <h2>Get Started with ChatBot</h2>
+        <p>Choose how you'd like to begin your journey with our intelligent AI assistant.</p>
+
+        <div class="modal-buttons">
+            <!-- Primary Modal Button: Sign Up -->
+            <button class="modal-button modal-button-primary" id="modalPrimaryBtn" data-url="{% url 'register' %}">
+                <span>🔐</span>
+                <span>Sign Up for Free</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 class="hero-title">Connect, Chat, It's That Simple</h1>
+            <p class="hero-subtitle">Engage in meaningful conversations with just one click. Experience the power of
+                AI-driven chat that understands your needs.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="startChatBtn">Start Chat</button>
+                <a href="{% url 'about' %}" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="chat-preview">
+                <div class="chat-bubble bot-bubble">
+                    <p>Hello, I am the Graphura AI. How can I assist you today?</p>
+                </div>
+                <div class="chat-bubble user-bubble">
+                    <p>I need help optimizing my workflow.</p>
+                </div>
+                <div class="chat-bubble bot-bubble">
+                    <p>I can certainly help with that. Graphura analyzes your data to suggest automated improvements.
+                    </p>
+                </div>
+                <div class="chat-bubble user-bubble">
+                    <p>That sounds great! Can I integrate custom data?</p>
+                </div>
+                <div class="chat-bubble bot-bubble">
+                    <p>Yes, you can upload documents to train your own custom agents.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-bg-shape shape-1"></div>
+    <div class="hero-bg-shape shape-2"></div>
+
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Why Choose Our ChatBot?</h2>
+            <p class="section-subtitle">Powerful features designed to enhance your conversations</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Instant Responses</h3>
+                <p>Get answers in real-time with fast AI processing and accurate responses.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Smart Understanding</h3>
+                <p>Advanced NLP ensures the bot understands context and intent.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>24/7 Availability</h3>
+                <p>Always online and ready to assist you.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Private</h3>
+                <p>Encrypted conversations with enterprise-grade security.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <h3>Personalized Experience</h3>
+                <p>Bot learns from conversations for smart suggestions.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3>Easy Integration</h3>
+                <p>Integrate with your platforms using simple APIs.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="section-title" style="margin-bottom: 2rem;">Ready to Start Chatting?</h2>
+            <button class="btn btn-primary btn-large" id="ctaBtn"
+                data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
+                data-chat-url="{% url 'chat' %}" data-login-url="{% url 'login' %}">Get Started Now</button>
+            <p style="margin-top: 1.5rem; color: #a0a0a0; font-size: 1.1rem;">Join thousands of users who trust our AI assistant</p>
+        </div>
+    </div>
+</section>
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'chat/js/home.js' %}"></script>
+
+{% endblock %}
+
+{% endblock %}
+

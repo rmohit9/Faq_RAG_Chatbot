@@ -1,0 +1,125 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+
+{% block title %}AI ChatBot - Register{% endblock %}
+
+{% block head_content %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'chat/css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'chat/images/Graphura-logo-white.png' %}" alt="Graphura Logo"
+                    style="height: 40px;">
+            </a>
+
+            <!-- Hamburger Menu -->
+            <div id="navbar-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="nav-links" id="navbar-dropdown">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'chat' %}">Chat</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin_dashboard' %}" class="nav-btn">Admin Dashboard</a></li>
+                {% else %}
+                <li><a href="{% url 'user_dashboard' %}" class="nav-btn">User Dashboard</a></li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="nav-btn">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="nav-btn">Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+    <!-- Register Section -->
+    <section class="register-section">
+        <div class="form-container">
+
+            <!-- LEFT: REGISTER FORM -->
+            <div class="form-card">
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <h2>Create Account ✨</h2>
+                <p>Join us and start chatting with AI!</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="input-group">
+                            <label>{{ field.label_tag }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="input-group captcha-group">
+                        <label for="id_captcha">CAPTCHA</label>
+                        <div class="captcha-display">
+                            <img src="{% url 'captcha' %}" alt="CAPTCHA Image" id="captcha-image">
+                            <button type="button" id="refresh-captcha" class="btn btn-secondary">Refresh</button>
+                        </div>
+                        {{ form.captcha }}
+                        {% for error in form.captcha.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Register</button>
+
+                    <p class="signup-link">Already have an account?
+                        <a href="{% url 'login' %}">Login</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- RIGHT: IMAGE -->
+            <div class="form-image">
+                <div class="img-placeholder">
+                    <img src="{% static 'chat/images/graphic-cartoon-character-login-vector-37485992.jpg' %}" alt="Register Illustration">
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const captchaImage = document.getElementById('captcha-image');
+        const refreshCaptchaBtn = document.getElementById('refresh-captcha');
+
+        if (refreshCaptchaBtn && captchaImage) {
+            refreshCaptchaBtn.addEventListener('click', function() {
+                // Append a timestamp to the URL to force the browser to reload the image
+                captchaImage.src = '{% url "captcha" %}' + '?' + new Date().getTime();
+            });
+        }
+    });
+</script>
+{% endblock %}

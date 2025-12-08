@@ -1,0 +1,141 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+
+{% block title %}Chatbot Messenger{% endblock %}
+
+{% block head_content %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{% static 'chat/css/chat.css' %}">
+
+{% endblock %}
+
+{% block content %}
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'chat/images/Graphura-logo-white.png' %}" alt="Graphura Logo"
+                    style="height: 40px;">
+            </a>
+
+            <!-- Hamburger Menu -->
+            <div id="navbar-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="nav-links" id="navbar-dropdown">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'chat' %}">Chat</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin_dashboard' %}" class="nav-btn">Admin Dashboard</a></li>
+                {% else %}
+                <li><a href="{% url 'user_dashboard' %}" class="nav-btn">User Dashboard</a></li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="nav-btn">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="nav-btn">Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+<div class="main-content">
+
+    <!-- Left Sidebar - Chat History -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Chat History</h2>
+            <button class="btn btn-danger" onclick="confirmDeleteHistory()" title="Delete History"><i class="fas fa-trash-alt"></i></button>
+            <button class="btn btn-primary" onclick="startNewChat()" title="New Chat">+</button>
+        </div>
+
+        <div class="chat-history" id="chatHistory">
+            <!-- Chat history dynamically populated -->
+        </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="chat-area">
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <button class="chat-sidebar-toggle" id="chat-sidebar-toggle" title="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="bot-avatar">AI</div>
+                <div class="chat-header-info">
+                    <h3>AI Assistant</h3>
+                    <p><span class="status-indicator"></span>Online</p>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Messages dynamically populated -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+
+                <!-- Quick Replies -->
+                <div class="quick-replies">
+                    <button class="btn btn-secondary" onclick="sendQuickReply('What can you do?')">What can you
+                        do?</button>
+                    <button class="btn btn-secondary" onclick="sendQuickReply('Tell me more')">Tell me more</button>
+                    <button class="btn btn-secondary" onclick="sendQuickReply('Get started')">Get started</button>
+                </div>
+
+                <!-- Message Input -->
+                <div class="input-container">
+                    <button id="micBtn" class="mic-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-mic">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                    <select id="botSelect" class="form-control" style="width: 150px; flex-shrink: 0;">
+                        {% for bot in bots %}
+                        <option value="{{ bot.id }}">{{ bot.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="input-wrapper">
+                        <textarea id="messageInput" placeholder="Type your message..." rows="1"
+                            onkeypress="handleKeyPress(event)"></textarea>
+                    </div>
+
+                    <button id="sendBtn" onclick="sendMessage()" class="btn btn-primary">
+                        <span>Send</span>
+                    </button>
+                    <div id="speechConfirmationButtons" class="speech-confirmation-buttons" style="display: none;">
+                        <button id="confirmSpeechBtn" onclick="sendSpeechMessage()" class="btn btn-success">Send</button>
+                        <button id="cancelSpeechBtn" onclick="cancelSpeechInput()" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'chat/js/chat.js' %}"></script>
+{% endblock %}

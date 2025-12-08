@@ -1,0 +1,202 @@
+{% extends 'chat/admin_base.html' %}
+{% load static %}
+
+{% block admin_title %}FAQ Training{% endblock %}
+
+{% block admin_content %}
+<style>
+    .faq-container { max-width: 900px; margin: 0 auto; padding: 1rem 0 2rem; }
+
+    /* Responsive adjustments for forms */
+    @media (max-width: 768px) {
+        .faq-container {
+            padding: 0.5rem;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .faq-card {
+            padding: 1.25rem;
+            margin: 0 0.5rem;
+        }
+
+        .form-grid {
+            gap: 1rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .cta {
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .faq-list {
+            gap: 0.5rem;
+        }
+
+        .faq-item {
+            padding: 0.75rem;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .faq-actions {
+            justify-content: flex-start;
+        }
+
+        .btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .faq-card {
+            padding: 1rem;
+            margin: 0 0.25rem;
+        }
+
+        .faq-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            padding: 0.5rem 0.7rem;
+            font-size: 0.85rem;
+        }
+
+        .cta {
+            padding: 0.7rem 0.9rem;
+            font-size: 0.9rem;
+        }
+
+        .faq-item {
+            padding: 0.6rem;
+        }
+    }
+    .faq-card {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #e5e7eb; border-radius: 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+        border: none; padding: 1.75rem;
+    }
+    .faq-header { text-align: center; margin-bottom: 0.75rem; }
+    .faq-header h2 { margin: 0 0 0.25rem 0; font-weight: 700; letter-spacing: 0.5px; }
+    .faq-header .subtext { color: #94a3b8; font-size: 0.95rem; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label { font-weight: 600; color: #cbd5e1; }
+    .form-group input[type="text"], .form-group textarea {
+        width: 100%; background: #0f172a; color: #e5e7eb;
+        border: 1px solid rgba(138, 99, 210, 0.25); border-radius: 12px;
+        padding: 0.75rem 0.9rem; outline: none;
+    }
+    .form-group textarea { min-height: 140px; }
+    .form-group input[type="text"]:focus, .form-group textarea:focus {
+        border-color: #8a63d2; box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+    }
+    .cta { display: inline-block; width: 100%; margin-top: 0.5rem;
+        background: linear-gradient(135deg, #8a63d2 0%, #5e35b1 100%);
+        border: none; border-radius: 12px; padding: 0.9rem 1.25rem; font-weight: 600; }
+    .cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(138, 99, 210, 0.35); }
+
+    .section-divider { position: relative; margin: 2rem auto 1.25rem; max-width: 900px; }
+    .section-divider::before { content: ""; display: block; height: 1px;
+        background: linear-gradient(90deg, rgba(138,99,210,0.0) 0%, rgba(138,99,210,0.4) 50%, rgba(138,99,210,0.0) 100%); }
+    .section-divider span { position: absolute; top: -0.7rem; left: 50%; transform: translateX(-50%);
+        background: #0f172a; padding: 0 0.75rem; color: #cbd5e1; font-weight: 600; }
+
+    .faq-list { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+    .faq-item { background: #0f172a; border: 1px solid rgba(138, 99, 210, 0.2); border-radius: 12px; padding: 1rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+    .faq-qa { color: #e5e7eb; }
+    .faq-qa .q { font-weight: 700; margin-bottom: 0.35rem; }
+    .faq-qa .a { color: #94a3b8; }
+    .faq-actions { display: inline-flex; gap: 0.5rem; align-items: center; }
+    .faq-actions .btn {
+        border: none;
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .faq-actions .btn-info { 
+        background: linear-gradient(135deg, #8a63d2 0%, #6d4ac4 100%);
+        color: white;
+    }
+    
+    .faq-actions .btn-info:hover { 
+        background: linear-gradient(135deg, #9b75db 0%, #7d5acc 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(138, 99, 210, 0.3);
+    }
+    
+    .faq-actions .btn-danger { 
+        background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        color: white;
+    }
+    
+    .faq-actions .btn-danger:hover { 
+        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+    }
+    .empty { text-align: center; color: #94a3b8; padding: 1rem; }
+</style>
+
+<div class="faq-container">
+    <div class="faq-card">
+        <div class="faq-header">
+            <h2>FAQ Training</h2>
+            <p class="subtext">Add and manage FAQs to improve chatbot answers</p>
+        </div>
+
+        <form method="post" action="{% url 'faq_training' %}" class="config-form">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="question">Question</label>
+                    <input type="text" id="question" name="question" placeholder="Enter the question" required>
+                </div>
+                <div class="form-group">
+                    <label for="answer">Answer</label>
+                    <textarea id="answer" name="answer" rows="3" placeholder="Enter the answer" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary cta" style="background: linear-gradient(135deg, #8a63d2 0%, #5e35b1 100%); border: none; border-radius: 10px; padding: 0.9rem 1.25rem; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(138, 99, 210, 0.25);">
+                <i class="fas fa-plus-circle"></i> Add FAQ
+            </button>
+        </form>
+    </div>
+
+    <div class="section-divider"><span>Existing FAQs</span></div>
+
+    <div class="faq-list">
+        {% for faq in faqs %}
+            <div class="faq-item">
+                <div class="faq-qa">
+                    <div class="q">Q: {{ faq.question }}</div>
+                    <div class="a">A: {{ faq.answer }}</div>
+                </div>
+                <div class="faq-actions">
+                    <a href="{% url 'edit_faq' faq.id %}" class="btn btn-sm btn-info">Edit</a>
+                    <form action="{% url 'delete_faq' faq.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this FAQ?');">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty">No FAQs found.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

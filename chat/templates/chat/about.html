@@ -1,0 +1,260 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+
+{% block title %}About Us | Graphura India - Digital Marketing Agency{% endblock %}
+
+{% block head_content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'chat/css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'chat/images/Graphura-logo-white.png' %}" alt="Graphura Logo"
+                    style="height: 40px;">
+            </a>
+
+            <!-- Hamburger Menu -->
+            <div id="navbar-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="nav-links" id="navbar-dropdown">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'chat' %}">Chat</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin_dashboard' %}" class="nav-btn">Admin Dashboard</a></li>
+                {% else %}
+                <li><a href="{% url 'user_dashboard' %}" class="nav-btn">User Dashboard</a></li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="nav-btn">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="nav-btn">Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-badge">Since 2025</span>
+        <h1>About <span class="text-gradient">Graphura</span></h1>
+        <p class="hero-subtitle">Empowering Digital Presence Since 2025</p>
+    </div>
+    <div class="scroll-indicator">
+        <div><span></span></div>
+    </div>
+    <div class="hero-fade"></div>
+</section>
+
+<!-- COMPANY OVERVIEW -->
+<section class="overview">
+    <div class="container">
+        <div class="overview-container">
+            <div class="overview-text">
+                <div class="section-header animate-on-scroll">
+                    <h2>Who We <span class="text-gradient">Are</span></h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="overview-content animate-on-scroll delay-1">
+                    <p><span class="highlight">Graphura India Private Limited</span> is a premier digital marketing agency committed to empowering small businesses and companies to expand their online presence.</p>
+                    <p>Since <span class="highlight">2025</span>, we have partnered with over <span class="highlight">500 clients</span>, helping them achieve goals through innovative strategies and data-driven solutions.</p>
+                    <p>We specialize in <span class="accent">SEO</span>, <span class="accent">social media marketing</span>, <span class="accent">content creation</span>, <span class="accent">PPC campaigns</span>, and more.</p>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stats-grid">
+                    <div class="stat-card animate-on-scroll delay-2">
+                        <div class="stat-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        </div>
+                        <div class="stat-value text-gradient">500+</div>
+                        <div class="stat-label">Clients Served</div>
+                    </div>
+
+                    <div class="stat-card animate-on-scroll delay-3">
+                        <div class="stat-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        </div>
+                        <div class="stat-value text-gradient">10+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+
+                    <div class="stat-card animate-on-scroll delay-4">
+                        <div class="stat-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div class="stat-value text-gradient">95%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+
+                    <div class="stat-card animate-on-scroll delay-5">
+                        <div class="stat-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                        </div>
+                        <div class="stat-value text-gradient">200%</div>
+                        <div class="stat-label">Avg. Growth</div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+
+<!-- VISION SECTION -->
+<section class="vision">
+    <div class="container">
+        <div class="vision-grid">
+            <div class="vision-content">
+                <span class="vision-badge">Our Vision</span>
+                <h2>Shaping the <span class="text-gradient">Future</span></h2>
+                <p>To be the leading digital solutions partner, empowering businesses to achieve growth through innovative strategies, cutting-edge technology, and exceptional creativity.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TEAM SECTION -->
+<section class="team">
+    <div class="container">
+        <div class="section-header team-header animate-on-scroll">
+            <div class="team-header-content">
+                <div class="team-header-text">
+                    <span class="team-badge">Our Team</span>
+                    <h2>The Brilliant Minds Behind <span style="color: var(--purple-accent)">Graphura</span></h2>
+                    <p>Meet the talented individuals who drive innovation and excellence at our agency</p>
+                </div>
+                <div class="team-grid">
+            <div class="team-card animate-on-scroll delay-1">
+                <img src="{% static 'chat/images/profile_image.jpg' %}" alt="Abdul Kadir Khan">
+                <div class="team-content">
+                    <h3>Abdul Kadir Khan</h3>
+                    <p class="team-role">Department Manager</p>
+                    <p class="team-title">Front-End Developer</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card animate-on-scroll delay-2">
+                <img src="{% static 'chat/images/profile_image.jpg' %}" alt="Gargi Patel">
+                <div class="team-content">
+                    <h3>Gargi Patel</h3>
+                    <p class="team-role">Project Lead</p>
+                    <p class="team-title">Python Full Stack Developer</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JS</span>
+                        <span class="skill-tag">Tailwind</span>
+                        <span class="skill-tag">Python & Django</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card animate-on-scroll delay-3">
+                <img src="{% static 'chat/images/profile_image.jpg' %}" alt="Shreyansh">
+                <div class="team-content">
+                    <h3>Shreyansh</h3>
+                    <p class="team-role">Developer</p>
+                    <p class="team-title">Python Full Stack Developer</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JS</span>
+                        <span class="skill-tag">Bootstrap</span>
+                        <span class="skill-tag">Python & Django</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card animate-on-scroll delay-4">
+                <img src="{% static 'chat/images/profile_image.jpg' %}" alt="Aneeka Sharma">
+                <div class="team-content">
+                    <h3>Aneeka Sharma</h3>
+                    <p class="team-role">Developer</p>
+                    <p class="team-title">Python Full Stack Developer</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JS</span>
+                        <span class="skill-tag">Python & Django</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-card animate-on-scroll delay-5">
+                <img src="{% static 'chat/images/profile_image.jpg' %}" alt="Mohit">
+                <div class="team-content">
+                    <h3>Mohit</h3>
+                    <p class="team-role">Developer</p>
+                    <p class="team-title">Python Full Stack Developer</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Flask</span>
+                        <span class="skill-tag">FastAPI</span>
+                        <span class="skill-tag">Django</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+    {{ block.super }}
+    <script>
+        // Scroll animation observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const navbarDropdown = document.getElementById('navbar-dropdown');
+            if (navbarToggle && navbarDropdown) {
+                navbarToggle.addEventListener('click', () => { navbarDropdown.classList.toggle('active'); navbarToggle.classList.toggle('open'); });
+                document.addEventListener('click', (e) => { if (!navbarToggle.contains(e.target) && !navbarDropdown.contains(e.target)) { navbarDropdown.classList.remove('active'); navbarToggle.classList.remove('open'); } });
+                navbarDropdown.addEventListener('click', (e) => { if (e.target.tagName === 'A') { navbarDropdown.classList.remove('active'); navbarToggle.classList.remove('open'); } });
+            }
+        });
+    </script>
+{% endblock extra_js %}
+        </div>
+    </section>
+
+</div>
+{% endblock %}

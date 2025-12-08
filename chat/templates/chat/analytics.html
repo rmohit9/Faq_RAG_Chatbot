@@ -1,0 +1,658 @@
+{% extends 'chat/admin_base.html' %}
+{% load static %}
+
+{% block admin_title %}Analytics{% endblock %}
+
+{% block head_content %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.analytics-container {
+    padding: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.analytics-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.analytics-header h1 {
+    color: #e0e0e0;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #8a63d2, #5e35b1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.analytics-header p {
+    color: #a0a0c0;
+    font-size: 1.1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background: rgba(30, 30, 45, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(138, 99, 210, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(138, 99, 210, 0.2);
+    border-color: rgba(138, 99, 210, 0.3);
+}
+
+.stat-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #a0a0c0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #8a63d2, #5e35b1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 0.5rem 0;
+    line-height: 1.2;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background: rgba(30, 30, 45, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(138, 99, 210, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container h3 {
+    margin: 0 0 1.5rem 0;
+    color: #e0e0e0;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+}
+
+/* Search functionality */
+.search-container {
+    position: relative;
+    max-width: 400px;
+    margin: 1.5rem auto 0;
+    display: none; /* Hidden by default, shown on mobile/tablet */
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    background: rgba(30, 30, 45, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(138, 99, 210, 0.15);
+    border-radius: 25px;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: rgba(138, 99, 210, 0.4);
+    box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.1);
+}
+
+.search-input::placeholder {
+    color: #a0a0c0;
+}
+
+.search-clear {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #a0a0c0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.search-clear:hover {
+    color: #e0e0e0;
+    background: rgba(138, 99, 210, 0.1);
+}
+
+/* Hidden elements for search */
+.search-hidden {
+    display: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .analytics-container {
+        padding: 1rem;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .analytics-header h1 {
+        font-size: 2rem;
+    }
+
+    .chart-container {
+        padding: 1rem;
+    }
+
+    .chart-wrapper {
+        height: 200px;
+    }
+
+    /* Show search bar on mobile/tablet */
+    .search-container {
+        display: block;
+    }
+}
+
+/* Larger screens */
+@media (min-width: 1024px) {
+    .analytics-container {
+        max-width: 1400px;
+    }
+
+    .charts-grid {
+        gap: 2.5rem;
+    }
+
+    .chart-wrapper {
+        height: 350px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .analytics-container {
+        max-width: 1600px;
+    }
+
+    .chart-wrapper {
+        height: 400px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block admin_content %}
+<div class="analytics-container">
+    <div class="analytics-header">
+        <h1>Analytics Dashboard</h1>
+        <p>Comprehensive insights into your chatbot platform performance</p>
+
+        <!-- Search Bar (visible on mobile/tablet) -->
+        <div class="search-container">
+            <input type="text" id="analyticsSearch" placeholder="Search stats and charts..." class="search-input">
+            <button class="search-clear" id="searchClear" style="display: none;">×</button>
+        </div>
+    </div>
+
+    <!-- Key Statistics -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p class="stat-value" id="totalUsers">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>Active Users (30d)</h3>
+            <p class="stat-value" id="activeUsers30d">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>New Users (30d)</h3>
+            <p class="stat-value" id="newUsers30d">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>New Users (7d)</h3>
+            <p class="stat-value" id="newUsers7d">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Sessions</h3>
+            <p class="stat-value" id="totalSessions">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>Sessions (30d)</h3>
+            <p class="stat-value" id="sessions30d">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Messages</h3>
+            <p class="stat-value" id="totalMessages">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>Messages (30d)</h3>
+            <p class="stat-value" id="messages30d">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>Avg Session Duration</h3>
+            <p class="stat-value" id="avgSessionDuration">N/A</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Bots</h3>
+            <p class="stat-value" id="totalBots">-</p>
+        </div>
+        <div class="stat-card">
+            <h3>FAQ Count</h3>
+            <p class="stat-value" id="faqCount">-</p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <!-- User Registrations Over Time -->
+        <div class="chart-container">
+            <h3>User Registrations Over Time</h3>
+            <div class="chart-wrapper">
+                <canvas id="userRegistrationsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Daily Active Users -->
+        <div class="chart-container">
+            <h3>Daily Active Users (Last 30 Days)</h3>
+            <div class="chart-wrapper">
+                <canvas id="dailyActiveUsersChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chat Sessions by Day -->
+        <div class="chart-container">
+            <h3>Chat Sessions by Day (Last 30 Days)</h3>
+            <div class="chart-wrapper">
+                <canvas id="chatSessionsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Messages by Day -->
+        <div class="chart-container">
+            <h3>Messages by Day (Last 30 Days)</h3>
+            <div class="chart-wrapper">
+                <canvas id="messagesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- User Activity Distribution -->
+        <div class="chart-container">
+            <h3>User Activity Distribution</h3>
+            <div class="chart-wrapper">
+                <canvas id="activityDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load analytics data and initialize charts
+function loadAnalyticsData() {
+    fetch('/api/analytics/')
+        .then(response => response.json())
+        .then(data => {
+            // Update stats cards
+            document.getElementById('totalUsers').textContent = data.summary.total_users;
+            document.getElementById('activeUsers30d').textContent = data.summary.active_users_30d;
+            document.getElementById('newUsers30d').textContent = data.summary.new_users_30d;
+            document.getElementById('newUsers7d').textContent = data.summary.new_users_7d;
+            document.getElementById('totalSessions').textContent = data.summary.total_sessions;
+            document.getElementById('sessions30d').textContent = data.summary.sessions_30d;
+            document.getElementById('totalMessages').textContent = data.summary.total_messages;
+            document.getElementById('messages30d').textContent = data.summary.messages_30d;
+            document.getElementById('avgSessionDuration').textContent = data.summary.avg_session_duration || 'N/A';
+            document.getElementById('totalBots').textContent = data.summary.total_bots;
+            document.getElementById('faqCount').textContent = data.summary.faq_count;
+
+            // Initialize charts
+            initializeCharts(data.charts);
+        })
+        .catch(error => {
+            console.error('Error loading analytics data:', error);
+            // Show error state
+            document.querySelectorAll('.stat-value').forEach(el => {
+                el.textContent = 'Error';
+                el.style.color = '#e74c3c';
+            });
+        });
+}
+
+function initializeCharts(chartData) {
+    // User Registrations Chart
+    const userLabels = chartData.user_registrations.map(item => item.month);
+    const userCounts = chartData.user_registrations.map(item => item.count);
+
+    const userRegistrationsCtx = document.getElementById('userRegistrationsChart').getContext('2d');
+    new Chart(userRegistrationsCtx, {
+        type: 'line',
+        data: {
+            labels: userLabels,
+            datasets: [{
+                label: 'User Registrations',
+                data: userCounts,
+                borderColor: '#8a63d2',
+                backgroundColor: 'rgba(138, 99, 210, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                }
+            }
+        }
+    });
+
+    // Daily Active Users Chart
+    const dailyLabels = chartData.daily_active_users.map(item => item.day);
+    const dailyCounts = chartData.daily_active_users.map(item => item.count);
+
+    const dailyActiveCtx = document.getElementById('dailyActiveUsersChart').getContext('2d');
+    new Chart(dailyActiveCtx, {
+        type: 'bar',
+        data: {
+            labels: dailyLabels,
+            datasets: [{
+                label: 'Active Users',
+                data: dailyCounts,
+                backgroundColor: 'rgba(138, 99, 210, 0.6)',
+                borderColor: '#8a63d2',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                }
+            }
+        }
+    });
+
+    // Chat Sessions Chart
+    const chatLabels = chartData.chat_sessions_daily.map(item => item.day);
+    const chatCounts = chartData.chat_sessions_daily.map(item => item.count);
+
+    const chatSessionsCtx = document.getElementById('chatSessionsChart').getContext('2d');
+    new Chart(chatSessionsCtx, {
+        type: 'line',
+        data: {
+            labels: chatLabels,
+            datasets: [{
+                label: 'Chat Sessions',
+                data: chatCounts,
+                borderColor: '#5e35b1',
+                backgroundColor: 'rgba(94, 53, 177, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                }
+            }
+        }
+    });
+
+    // Messages Chart
+    const messageLabels = chartData.messages_daily.map(item => item.day);
+    const messageCounts = chartData.messages_daily.map(item => item.count);
+
+    const messagesCtx = document.getElementById('messagesChart').getContext('2d');
+    new Chart(messagesCtx, {
+        type: 'bar',
+        data: {
+            labels: messageLabels,
+            datasets: [{
+                label: 'Messages',
+                data: messageCounts,
+                backgroundColor: 'rgba(138, 99, 210, 0.6)',
+                borderColor: '#8a63d2',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#a0a0c0'
+                    }
+                }
+            }
+        }
+    });
+
+    // User Activity Distribution Chart
+    const activityLabels = chartData.user_activity.map(item => `${item.sessions} sessions`);
+    const activityCounts = chartData.user_activity.map(item => item.users);
+
+    const activityCtx = document.getElementById('activityDistributionChart').getContext('2d');
+    new Chart(activityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: activityLabels,
+            datasets: [{
+                data: activityCounts,
+                backgroundColor: [
+                    '#8a63d2',
+                    '#5e35b1',
+                    '#3f2b96',
+                    '#2c1b7d',
+                    '#1a0d5c',
+                    '#0f0842',
+                    '#050228'
+                ],
+                borderWidth: 2,
+                borderColor: '#1a1a2e'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        color: '#a0a0c0'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Search functionality for mobile/tablet
+function initializeSearch() {
+    const searchInput = document.getElementById('analyticsSearch');
+    const searchClear = document.getElementById('searchClear');
+    const statCards = document.querySelectorAll('.stat-card');
+    const chartContainers = document.querySelectorAll('.chart-container');
+
+    function filterElements(searchTerm) {
+        const term = searchTerm.toLowerCase().trim();
+
+        // Filter stat cards
+        statCards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const value = card.querySelector('.stat-value').textContent.toLowerCase();
+            const shouldShow = title.includes(term) || value.includes(term) || term === '';
+            card.classList.toggle('search-hidden', !shouldShow);
+        });
+
+        // Filter chart containers
+        chartContainers.forEach(container => {
+            const title = container.querySelector('h3').textContent.toLowerCase();
+            const shouldShow = title.includes(term) || term === '';
+            container.classList.toggle('search-hidden', !shouldShow);
+        });
+    }
+
+    // Search input event
+    searchInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        filterElements(value);
+
+        // Show/hide clear button
+        searchClear.style.display = value ? 'block' : 'none';
+    });
+
+    // Clear search
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        filterElements('');
+        searchClear.style.display = 'none';
+        searchInput.blur(); // Remove focus to restore original state
+    });
+
+    // Clear on Escape key
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            filterElements('');
+            searchClear.style.display = 'none';
+        }
+    });
+}
+
+// Load data when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    loadAnalyticsData();
+    initializeSearch();
+});
+</script>
+{% endblock %}
